@@ -1,6 +1,6 @@
 import gradio as gr
 from chat_utils import stream_response
-from doc_utils import clear_local_docs, load_github_repo
+from doc_utils import clear_local_docs
 
 css = """
 .gradio-container{
@@ -43,28 +43,6 @@ with gr.Blocks(title="Agentic Chat RAG", fill_width=True, css=css) as demo:
                                          interactive=True,
                                          size="sm",
                                          elem_id="button")
-
-            with gr.Tab("Chat With a GitHub Repository"):
-                repoOwnerUsername = gr.Textbox(label="GitHub Repository Owners Username:",
-                                               placeholder="Enter GitHub Repository Owners Username Here....",
-                                               interactive=True)
-                repoName = gr.Textbox(label="GitHub Repository Name:",
-                                      placeholder="Enter Repository Name Here....",
-                                      interactive=True)
-                repoBranch = gr.Textbox(label="GitHub Repository Branch Name:",
-                                        placeholder="Enter Branch Name Here....",
-                                        interactive=True)
-                with gr.Row():
-                    getRepo = gr.Button(value="Load Repository to Model",
-                                        size="sm",
-                                        interactive=True,
-                                        elem_id="button")
-                    removeRepo = gr.Button(value="Reset Info and Remove Repository from Model",
-                                           size="sm",
-                                           interactive=True,
-                                           elem_id="button")
-                github_status = gr.Textbox(label="GitHub Status", interactive=False)
-
     # Set up event handlers
     msg.submit(stream_response, [msg, chatbot], [msg, chatbot])
     # clear_chat_mem.click(clear_all_memory, [], [chatbot, msg])
@@ -73,10 +51,4 @@ with gr.Blocks(title="Agentic Chat RAG", fill_width=True, css=css) as demo:
     # upload.click(load_local_docs(), [files], [upload_status])
     clear_db.click(clear_local_docs())
     #
-    # # GitHub repository handlers
-    getRepo.click(load_github_repo,
-                  [repoOwnerUsername, repoName, repoBranch])
-    # removeRepo.click(reset_github_info,
-    #                  [],
-    #                  [repoOwnerUsername, repoName, repoBranch, github_status])
     demo.launch(inbrowser=True) #, share=True
